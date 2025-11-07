@@ -1,0 +1,44 @@
+{% extends 'sign_in_layout.html' %}
+{% block back_button %}{% endblock %}
+{% block title %}Sign Up | Market Pulse{% endblock %}
+{% block heading %}Create an Account{% endblock %}
+{% block subheading %}Join us and get started instantly{% endblock %}
+
+{% block content %}
+<form method="POST" class="space-y-5">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <div class="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-md text-sm">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+
+  {% for field in form %}
+    <div>
+      <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+        {{ field.label }}
+      </label>
+      {{ field }}
+      {% if field.errors %}
+        <p class="text-red-600 text-sm mt-1">{{ field.errors|striptags }}</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  <button type="submit"
+    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium shadow-md hover:shadow-lg transition duration-200">
+    Submit
+  </button>
+
+</form>
+
+<script>
+  document.querySelectorAll("input").forEach(el => {
+    el.classList.add(
+      "w-full", "px-4", "py-2.5", "border", "border-gray-300",
+      "rounded-lg", "focus:ring-2", "focus:ring-indigo-400", "focus:outline-none"
+    );
+  });
+</script>
+{% endblock %}

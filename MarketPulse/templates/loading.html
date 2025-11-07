@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Loading...</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(-45deg, #1e3a8a, #2563eb, #3b82f6, #a5b4fc);
+    background-size: 400% 400%;
+    animation: gradientShift 12s ease infinite;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+    color: white;
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .loader {
+    text-align: center;
+  }
+
+  .spinner {
+    width: 80px;
+    height: 80px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top: 6px solid white;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .loading-text {
+    font-size: 1.4em;
+    letter-spacing: 2px;
+    margin-top: 10px;
+    animation: fadeText 1.5s ease-in-out infinite;
+  }
+
+  @keyframes fadeText {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+  }
+
+  .glow {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+                 0 0 20px rgba(255, 255, 255, 0.6);
+  }
+</style>
+</head>
+<body>
+  <div class="loader">
+    <div class="spinner"></div>
+    <div class="loading-text glow" id="loadingText">Loading...</div>
+  </div>
+
+  <script>
+    const messages = [
+      "Fetching Market Pulse data...",
+      "Syncing live prices and tickers...",
+      "Analyzing market trends and sentiment...",
+      "Updating charts and heatmaps...",
+      "Calculating indicators and signals...",
+      "Finalizing your dashboard..."
+    ];
+
+    const loadingText = document.getElementById('loadingText');
+    let i = 0;
+
+    setInterval(() => {
+      loadingText.textContent = messages[i];
+      i = (i + 1) % messages.length;
+    }, 1500);
+  </script>
+</body>
+</html>

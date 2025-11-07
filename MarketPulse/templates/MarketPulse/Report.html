@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}Reports | Market Pulse{% endblock %}
+
+{% block content %}
+<main class="bg-gradient-to-b from-indigo-50 via-blue-50 to-white min-h-screen pt-24 pb-16 px-6">
+
+  <h1 class="text-3xl font-bold text-indigo-700 mb-6">Sentiment Reports</h1>
+
+  <!-- Pie Chart Section -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+    <div class="bg-white rounded-xl shadow-md p-6">
+      <h2 class="text-xl font-semibold text-blue-700 mb-4">Sentiment Distribution</h2>
+      <canvas id="sentimentPie"></canvas>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md p-6">
+      <h2 class="text-xl font-semibold text-blue-700 mb-4">Category Insights</h2>
+      <canvas id="insightsBar"></canvas>
+    </div>
+  </div>
+
+  <!-- Summary Section -->
+  <div class="bg-white rounded-xl shadow-md p-6">
+    <h2 class="text-xl font-semibold text-blue-700 mb-4">Summary</h2>
+    <div id="summaryText" class="prose max-w-none text-gray-800"></div>
+  </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const reportData = {{ report_data|safe }};
+  const summaryText = `{{ summary|escapejs }}`;
+
+  // 🥧 Pie Chart
+  const pieCtx = document.getElementById("sentimentPie").getContext("2d");
+  const sentiment = reportData["Sentiment Distribution"];
+  new Chart(pieCtx, {
+    type: "pie",
+    data: {
+      labels: Object.keys(sentiment),
+      datasets: [{
+        data: Object.values(sentiment),
+        backgroundColor: ["#4f46e5", "#93c5fd", "#1d4ed8"],
+      }]
+    }
+  });
+
+  // 📊 Bar Chart
+  const barCtx = document.getElementById("insightsBar").getContext("2d");
+  const insights = reportData["Insights Summary"];
+  const flattened = Object.entries(insights).flatMap(([cat, vals]) =>
+    Object.entries(vals).map(([key, val]) => ({ cat, key, val }))
+  );
+
+  new Chart(barCtx, {
+    type: "bar",
+    data: {
+      labels: flattened.map(e => e.key),
+      datasets: [{
+        label: "Mentions",
+        data: flattened.map(e => e.val),
+        backgroundColor: "#6366f1",
+      }]
+    },
+    options: {
+      indexAxis: "y",
+      scales: { x: { beginAtZero: true } },
+    }
+  });
+
+  // 🧾 Markdown Summary
+  document.getElementById("summaryText").innerHTML = marked.parse(summaryText);
+</script>
+
+{% endblock %}
